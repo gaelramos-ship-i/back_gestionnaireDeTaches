@@ -1,4 +1,5 @@
 const Project = require('../models/projectModel')
+const User = require('../models/userModel')
 
 // // Fournir tous les produits 
 // exports.getAllProjects = async (req, res) => {
@@ -35,6 +36,34 @@ exports.createProject = async (req, res) => {
 
         const newProject = await project.save()
         res.status(201).json(newProject)
+    } catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+exports.getMail = async (req, res) => {
+    try {
+
+        const { email } = req.body
+        if (!email) {
+            return res.status(400).json({ message: "L'email est requis" })
+        }
+
+        const project = await Project.findById(req.params.id)
+        if (!project) {
+            return res.status(404).json({ message: "Projet non trouvé" })
+        }
+
+        const inviteUser = await User.findOne({ email })
+        if (!inviteUser) {
+            return res.status(404).json({ message: "Aucun utilisateur enregistré avec cet email" })
+        }
+
+        project.collaborator.push(inviteUser)
+
+        const updateProject = await project.save()
+        res.json(updateProject)
+
     } catch (err) {
         res.status(400).json({ message: err.message })
     }

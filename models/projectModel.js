@@ -7,7 +7,11 @@ const projectSchema = new mongoose.Schema({
     },
     desc: {
         type: String,
-        required: true,
+        required: true
+    },
+    author: {
+        type: String,
+        required: true
     },
 })
 

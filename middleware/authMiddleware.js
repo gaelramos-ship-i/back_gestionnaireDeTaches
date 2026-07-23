@@ -7,12 +7,12 @@ const authMiddleware = async (req, res, next) => {
     try {
         let token
 
-        if(req.headers.authorization?.stratsWith('Bearer')){
+        if(req.headers.authorization?.startsWith('Bearer')){
             token = req.headers.authorization.split(' ')[1]
         }
 
         if(!token){
-            return req.status(401).json({message: 'Not authorized, token missing'})
+            return res.status(401).json({message: 'Not authorized, token missing'})
         }
 
         const decoded = jwt.verify(token, JWT_SECRET)

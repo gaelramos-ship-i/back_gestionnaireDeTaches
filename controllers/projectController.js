@@ -1,30 +1,6 @@
 const Project = require('../models/projectModel')
 const User = require('../models/userModel')
 
-// // Fournir tous les produits 
-// exports.getAllProjects = async (req, res) => {
-//     try {
-//         // Va chercher dans la bdd tous les produits
-//         const project = await Project.find()
-//         res.json(project)
-//     } catch (err) {
-//         res.status(500).json({ message: err.message })
-//     }
-// }
-
-// exports.getProjectByID = async (req, res) => {
-//     try {
-//         const project = await Project.findById(req.params.id)
-//         if(project == null){
-//             return res.status(404).json({message: "Projet non trouvé"})
-//         }
-//         res.json(project)
-//     } catch (err) {
-//         res.status(500).json({ message: err.message })
-//     }
-// }
-
-
 // Créer un produit
 exports.createProject = async (req, res) => {
     try {
@@ -41,7 +17,7 @@ exports.createProject = async (req, res) => {
     }
 }
 
-exports.getMail = async (req, res) => {
+exports.setMail = async (req, res) => {
     try {
 
         const { email } = req.body
@@ -59,12 +35,33 @@ exports.getMail = async (req, res) => {
             return res.status(404).json({ message: "Aucun utilisateur enregistré avec cet email" })
         }
 
-        project.collaborator.push(inviteUser)
+        if (project.collaborator.includes(inviteUser.email)) {
+            return res.status(400).json({ message: "Cet utilisateur est déjà collaborateur" })
+        }
+
+        project.collaborator.push(inviteUser.email)
 
         const updateProject = await project.save()
         res.json(updateProject)
 
     } catch (err) {
         res.status(400).json({ message: err.message })
+    }
+}
+
+exports.getProject = async (req, res) => {
+    try {
+       
+        const project = await Project.find({
+            $or: [
+                { author: req.user._id },
+                { collaborator: req.user._id }
+            ]
+        })
+
+        return res.status(200).json(project || [])
+
+    } catch (err) {
+        res.status(500).json({ message: err.message })
     }
 }

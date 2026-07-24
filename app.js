@@ -7,12 +7,10 @@ require('./config/db')
 
 const authRoutes = require('./routes/authRoutes')
 const projectRoutes = require('./routes/projectRoute')
-const collaboratorRoutes = require('./routes/collaborateurRoutes')
 
 app.use(express.json())
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/project', projectRoutes)
-app.use('/api/v1/invite', collaboratorRoutes)
 
 app.get('/', (req, res) => {
     res.send('Bienvenue sur mon API RESTful !')

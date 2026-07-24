@@ -6,5 +6,7 @@ const projectController = require('../controllers/projectController')
 // router.get('/', authMiddleware, projectController.getAllProjects)
 // router.get('/:id', authMiddleware, projectController.getProjectByID)
 router.post('/', authMiddleware, projectController.createProject)
+router.post('/invite/:id', authMiddleware, projectController.setMail)
+router.get('/:id', authMiddleware, projectController.getProject)
 
 module.exports = router

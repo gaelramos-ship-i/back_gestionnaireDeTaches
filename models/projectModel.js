@@ -15,7 +15,7 @@ const projectSchema = new mongoose.Schema({
     },
     collaborator: {
         type: Array,
-        required: false
+        default: []
     }
 })
 
